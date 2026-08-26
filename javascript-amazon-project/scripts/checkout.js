@@ -29,7 +29,7 @@ cart.forEach((cartItem) => {
                   ${matchingProduct.name}
                 </div>
                 <div class="product-price">
-                  ₹${matchingProduct.priceRupees}
+                  ₹${matchingProduct.priceRupees.toLocaleString('en-IN')}
                 </div>
                 <div class="product-quantity">
                   <span>
@@ -51,7 +51,7 @@ cart.forEach((cartItem) => {
 
                 <div class="delivery-option">
                   <input type="radio" class="delivery-option-input"
-                    name="delivery-option-2">
+                    name="delivery-option-${matchingProduct.id}">
                   <div>
                     <div class="delivery-option-date">
                       Tuesday, June 21
@@ -63,7 +63,7 @@ cart.forEach((cartItem) => {
                 </div>
                 <div class="delivery-option">
                   <input type="radio" checked class="delivery-option-input"
-                    name="delivery-option-2">
+                    name="delivery-option-${matchingProduct.id}">
                   <div>
                     <div class="delivery-option-date">
                       Wednesday, June 15
@@ -75,7 +75,7 @@ cart.forEach((cartItem) => {
                 </div>
                 <div class="delivery-option">
                   <input type="radio" class="delivery-option-input"
-                    name="delivery-option-2">
+                    name="delivery-option-${matchingProduct.id}">
                   <div>
                     <div class="delivery-option-date">
                       Monday, June 13
@@ -93,4 +93,24 @@ cart.forEach((cartItem) => {
 
 document.querySelector('.js-order-summary').innerHTML = cartSummeryHTML;
 
-console.log(cartSummeryHTML);
+// ---- Calculate Payment Summary in Indian Rupees ----
+let itemsTotal = 0;
+
+cart.forEach((cartItem) => {
+  products.forEach((product) => {
+    if (product.id === cartItem.productId) {
+      itemsTotal += product.priceRupees * cartItem.quantity;
+    }
+  });
+});
+
+const shipping = itemsTotal >= 5000 ? 0 : 399;
+const totalBeforeTax = itemsTotal + shipping;
+const tax = Math.round(totalBeforeTax * 0.10);
+const orderTotal = totalBeforeTax + tax;
+
+document.querySelector('.js-items-total').textContent = '₹' + itemsTotal.toLocaleString('en-IN');
+document.querySelector('.js-shipping').textContent = shipping === 0 ? 'FREE' : '₹' + shipping.toLocaleString('en-IN');
+document.querySelector('.js-total-before-tax').textContent = '₹' + totalBeforeTax.toLocaleString('en-IN');
+document.querySelector('.js-tax').textContent = '₹' + tax.toLocaleString('en-IN');
+document.querySelector('.js-order-total').textContent = '₹' + orderTotal.toLocaleString('en-IN');
