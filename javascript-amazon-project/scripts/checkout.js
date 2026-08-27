@@ -15,7 +15,7 @@ cart.forEach((cartItem) => {
    });
    
    cartSummeryHTML += `
-   <div class="cart-item-container">
+   <div class="cart-item-container js-cart-container-${matchingProduct.id}">
             <div class="delivery-date">
               Delivery date: Wednesday, June 15
             </div>
@@ -94,6 +94,7 @@ cart.forEach((cartItem) => {
 document.querySelector('.js-order-summary').innerHTML = cartSummeryHTML;
 
 // ---- Calculate Payment Summary in Indian Rupees ----
+//start 
 let itemsTotal = 0;
 
 cart.forEach((cartItem) => {
@@ -114,11 +115,18 @@ document.querySelector('.js-shipping').textContent = shipping === 0 ? 'FREE' : '
 document.querySelector('.js-total-before-tax').textContent = '₹' + totalBeforeTax.toLocaleString('en-IN');
 document.querySelector('.js-tax').textContent = '₹' + tax.toLocaleString('en-IN');
 document.querySelector('.js-order-total').textContent = '₹' + orderTotal.toLocaleString('en-IN');
+//end 
+
 
 document.querySelectorAll('.js-delete-link').forEach((link) => {
   link.addEventListener('click' , () => {
     const productId = link.dataset.productId;
-    removefromcart(productId),
-    console.log(cart);
+    removefromcart(productId);
+
+
+    const container = document.querySelector (
+      `.js-cart-container-${productId}`
+    );
+    container.remove();
   });
 });
